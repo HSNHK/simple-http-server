@@ -2,7 +2,7 @@ from logging import DEBUG, INFO, ERROR
 import sys
 import logging
 
-class Log():
+class Log:
     def __init__(self, Name, Format="%(asctime)s | %(levelname)s | %(message)s ", level=INFO):
         #Logger configuration
         self.console_formater=logging.Formatter(Format)

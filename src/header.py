@@ -98,31 +98,40 @@ class Assembler:
     def __init__(self,header:str):
         self.__header_Assembled=header.splitlines()
 
+    @property
     def get_method(self)->str:
         return self.__header_Assembled[0].split(' ')[0]
 
+    @property
     def get_parameter(self)->str:
         return self.__header_Assembled[0].split(' ')[1]
 
+    @property
     def get_http_version(self)->str:
         return self.__header_Assembled[0].split(' ')[2]
     
+    @property
     def get_host(self)->str:
         return self.__header_Assembled[1].split(':')[1].strip()
 
+    @property
     def get_connection(self)->str:
         return self.__header_Assembled[2].split(':')[1].strip()
 
+    @property
     def get_content_length(self)->str:
         return self.__header_Assembled[3].split(':')[1].strip()
 
+    @property
     def get_user_agent(self)->str:
         return self.__header_Assembled[4].split(':')[1].strip()
 
+    @property
     def get_content_type(self)->str:
         return self.__header_Assembled[6].split(':')[1].strip()
 
+    @property
     def get_body(self)->str:
-        if self.get_method()=="POST" or self.get_method()=="UPDATE":
+        if self.get_method=="POST" or self.get_method=="UPDATE":
             return self.__header_Assembled[-1]
         return None
