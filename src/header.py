@@ -1,3 +1,4 @@
+from datetime import datetime
 
 class ContentTypes():
     def __init__(self):
@@ -61,3 +62,67 @@ class StatusCode():
 
     def delete(self, code: int):
         del self.__status_code[code]
+
+class Generate:
+    def __init__(self, version=1.1, status_code=200, content_type="plain"):
+        self.code=StatusCode()
+        self.type=ContentTypes()
+
+        self.content_type=content_type
+        self.header="HTTP/1.1 "
+        self.date=datetime.now()
+        self.server_name="http server by HSNHK"
+        self.status_code=status_code
+
+    def set_date(self,date=datetime.now):
+        self.date=datetime.now()
+
+    def set_server_name(self,name):
+        self.server_name=name
+    
+    def set_content_type(self,type):
+        self.content_type=self.type.get(type)
+
+    def set_status_code(self,code):
+        self.status_code=code
+
+    def generate_header(self)->str:
+        self.header+="%d %s\n"%(self.status_code,self.code.get(self.status_code))
+        self.header+="Date : %s\n"%self.date
+        self.header+="Server : %s\n"%self.server_name
+        self.header+="Content-type : %s\n" %self.content_type
+        self.header+="Connection : close\n\n"
+        return self.header
+
+class Assembler:
+    def __init__(self,header:str):
+        self.__header_Assembled=header.splitlines()
+
+    def get_method(self)->str:
+        return self.__header_Assembled[0].split(' ')[0]
+
+    def get_parameter(self)->str:
+        return self.__header_Assembled[0].split(' ')[1]
+
+    def get_http_version(self)->str:
+        return self.__header_Assembled[0].split(' ')[2]
+    
+    def get_host(self)->str:
+        return self.__header_Assembled[1].split(':')[1].strip()
+
+    def get_connection(self)->str:
+        return self.__header_Assembled[2].split(':')[1].strip()
+
+    def get_content_length(self)->str:
+        return self.__header_Assembled[3].split(':')[1].strip()
+
+    def get_user_agent(self)->str:
+        return self.__header_Assembled[4].split(':')[1].strip()
+
+    def get_content_type(self)->str:
+        return self.__header_Assembled[6].split(':')[1].strip()
+
+    def get_body(self)->str:
+        if self.get_method()=="POST" or self.get_method()=="UPDATE":
+            return self.__header_Assembled[-1]
+        return None
