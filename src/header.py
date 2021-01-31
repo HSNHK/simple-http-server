@@ -68,7 +68,7 @@ class Generate:
         self.code=StatusCode()
         self.type=ContentTypes()
 
-        self.content_type=content_type
+        self.content_type=self.type.get(content_type)
         self.header="HTTP/1.1 "
         self.date=datetime.now()
         self.server_name="http server by HSNHK"
