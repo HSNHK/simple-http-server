@@ -13,14 +13,14 @@ class Log:
         self.logger.setLevel(level)
         self.logger.addHandler(self.console_logger)
 
-    def info(self,message):
-        self.logger.info(message)
+    def info(self,*messages):
+        self.logger.info(msg=" ".join(str(message) for message in messages))
 
-    def warning(self,message):
-        self.logger.warning(message)
+    def warning(self,*messages):
+        self.logger.warning(msg=" ".join(str(message) for message in messages))
     
-    def error(self,message):
-        self.logger.error(message)
+    def error(self,*messages):
+        self.logger.error(msg=" ".join(str(message) for message in messages))
 
-    def critical(self,message):
-        self.logger.critical(message)
+    def critical(self,*messages):
+        self.logger.critical(msg=" ".join(str(message) for message in messages))
