@@ -1,7 +1,7 @@
 # simple http server
 In this project, it is supposed to be designed from the base of a http web server and it is just a small example.<br>
 💪This project is designed in Python language.<br>
-👌It may become a flask-like library in the future<br><br>
+👌It may become a flask-like library in the future<br>
 😁The image below illustrates the transfer of requests:<br>
 <img src="https://raw.githubusercontent.com/HSNHK/simple-http-server/main/doc/Description.png" width="500" height="300">
 ## simple example : 
