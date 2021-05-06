@@ -1,4 +1,4 @@
-from .header import Generate,Assembler
+from .io import Response,Request
 from datetime import datetime
 from logging import DEBUG
 from .log import Log
@@ -6,7 +6,7 @@ import threading
 import socket
 import sys
 
-class web_server:
+class WebServer:
     def __init__(self,host="127.0.0.1",port=8080,route={},DEBUG=False):
         self.HOST=host
         self.PORT=port
@@ -58,28 +58,28 @@ class web_server:
 
                 if not data:
                     break
-                request_data=Assembler(data)
+                request=Request(data)
 
                 self.Log.info("The request: |%s| |%s| |%s| |%s|"%("{}:{}".format(addres[0],addres[1]),
-                                request_data.get_method,
-                                request_data.get_parameter,
+                                request.get_method,
+                                request.get_parameter,
                                 str(datetime.now())))
 
-                if request_data.get_parameter in self.route_table:
-                    if type(self.route_table[request_data.get_parameter]) is list:
-                        Method=self.route_table[request_data.get_parameter][1]
-                        if request_data.get_method.casefold()!=Method.casefold():
+                if request.get_parameter in self.route_table:
+                    if type(self.route_table[request.get_parameter]) is list:
+                        Method=self.route_table[request.get_parameter][1]
+                        if request.get_method.casefold()!=Method.casefold():
                              self.protocol_not_supported(client)
                              break
-                        function=self.route_table[request_data.get_parameter][0](request_data,client)
+                        function=self.route_table[request.get_parameter][0](request,client)
                     else:
-                        function=self.route_table[request_data.get_parameter](request_data,client)
+                        function=self.route_table[request.get_parameter](request,client)
 
                     DATA=function["data"]
                     if type(DATA)!=bytes:
                         DATA=str(DATA).encode()
 
-                    HEADER=Generate(status_code=200,content_type=function["type"])
+                    HEADER=Response(status_code=200,content_type=function["type"])
                     self.__send(client,HEADER.generate_header(),DATA)
                     break
                 else:
@@ -91,16 +91,16 @@ class web_server:
                 break
     
     def not_found(self,client):
-        HEADER = Generate(status_code=404, content_type="html")
+        HEADER = Response(status_code=404, content_type="html")
         self.__send(client, HEADER.generate_header(),
                     "<br>Not Found 404</br>".encode())
 
     def internal_error(self,client):
-        HEADER = Generate(status_code=500, content_type="html")
+        HEADER = Response(status_code=500, content_type="html")
         self.__send(client, HEADER.generate_header(),
                     "<h1>Internal Server Error 500</h1>".encode())
 
     def protocol_not_supported(self,client):
-        HEADER = Generate(status_code=404, content_type="html")
+        HEADER = Response(status_code=404, content_type="html")
         self.__send(client, HEADER.generate_header(),
                     "<br>Protocol Not Supported</br>".encode())

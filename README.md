@@ -1,35 +1,57 @@
 # simple http server
 In this project, it is supposed to be designed from the base of a http web server and it is just a small example.<br>
-💪This project is designed in Python language.<br>
-👌It may become a flask-like library in the future<br>
-😁The image below illustrates the transfer of requests:<br>
-<img src="https://raw.githubusercontent.com/HSNHK/simple-http-server/main/doc/Description.png" width="500" height="300">
-## simple example : 
+# Life cycle
+```
+ServerBuilder -> Accept -> WorkerClient -> Worker -> Dispatcher
+```
+## Simple example
 ```python
 
-import web_server
+from src import WebServer,Request
 
-def index(request:Assembler)->dict:
+
+def index(request:Request,client:socket)->dict:
     if request.get_method=="GET":
-        return {"data":b"welcome to index page","type":"plain"}
+        return {"data":"welcome to index page","type":"plain"}
     else:
-        return {"data": b"not protocol supported", "type": "plain"}
-    
-def fav(request: Assembler) -> dict:
+        return {"data":"not protocol supported", "type": "plain"}
+        
+def programer(request:Request,client:socket)->dict:
+    return {"data":"""<center>hello im hasan hk<br>
+            You can follow me through my GitHub account<br>
+            <img src=\"https://github.com/HSNHK.png?size=100\"><br>
+            <a href=\"https://github.com/HSNHK\">GitHub Page</a>""", "type": "html"}
+
+def fav(request: Request,client:socket) -> dict:
     file=open("fav.png","rb")
     return {"data":file.read(),"type":"img"}
     
-urlpatterns={"/":index,
-    "/programer":programer,
+urlpatterns = {"/":index,
+    "/programer":[programer,"POST"],
     "/favicon.ico":fav}
 
-server=web_server(port=8080,route=urlpatterns)
-server.start()
+server=WebServer(port=80,route=urlpatterns)
+server.run()
 
 ```
-The example above is an example of using this library<br>
-Each function must have a dict output<br>
-*data Output data : (type : Binary , value : * )<br>
-*type Output data type : (type : String , value : Content Types )<br>
-
-
+# Request
+```python
+# Type of request method received
+request.get_method
+# url parameter
+request.get_parameter
+# http version
+request.get_http_version
+# client host info
+request.get_host
+# connection status
+request.get_connection
+# content len
+request.get_content_length
+# client user agent
+request.get_user_agent
+# request content type
+request.get_content_type
+# body
+request.get_body
+```

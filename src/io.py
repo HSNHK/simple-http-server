@@ -63,7 +63,7 @@ class StatusCode():
     def delete(self, code: int):
         del self.__status_code[code]
 
-class Generate:
+class Response:
     def __init__(self, version=1.1, status_code=200, content_type="plain"):
         self.code=StatusCode()
         self.type=ContentTypes()
@@ -94,7 +94,7 @@ class Generate:
         self.header+="Connection : close\n\n"
         return self.header
 
-class Assembler:
+class Request:
     def __init__(self,header:str):
         self.__header_Assembled=header.splitlines()
 
